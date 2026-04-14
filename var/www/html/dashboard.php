@@ -847,7 +847,7 @@ $runtimeSnapshot = [
             <section class="panel" style="--delay: 8;">
                 <div class="panel-header">
                     <div>
-                        <h2>Runtime snapshot</h2>
+                        <h2>Runtime Snanapshot</h2>
                         <p>A direct, readable mirror of the current contract so debugging stays fast.</p>
                     </div>
                     <span class="chip tone-neutral">variables.data</span>
