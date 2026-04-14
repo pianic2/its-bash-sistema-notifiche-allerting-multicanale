@@ -31,3 +31,6 @@
 172.18.0.1 - - [09/Apr/2026:16:53:13 +0200] "-" 408 0 "-" "-"
 172.18.0.1 - - [09/Apr/2026:17:06:22 +0200] "GET /dashboard.php HTTP/1.1" 200 517 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
 172.18.0.1 - - [09/Apr/2026:17:07:15 +0200] "-" 408 0 "-" "-"
+172.18.0.1 - - [14/Apr/2026:15:17:22 +0200] "GET /dashboard.php HTTP/1.1" 200 4423 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
+172.18.0.1 - - [14/Apr/2026:15:17:22 +0200] "GET /favicon.ico HTTP/1.1" 404 529 "http://localhost:8080/dashboard.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
+172.18.0.1 - - [14/Apr/2026:15:18:13 +0200] "-" 408 0 "-" "-"
