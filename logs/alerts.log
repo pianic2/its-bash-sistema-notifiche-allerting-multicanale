@@ -22,3 +22,268 @@
 2026-04-09 17:39:44 | SERVICE_DOWN | CRITICAL | ssh is down
 2026-04-09 17:40:44 | SERVICE_DOWN | CRITICAL | ssh is down
 2026-04-09 17:41:44 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:03:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:04:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:05:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:06:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:07:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:08:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:09:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:10:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:11:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:12:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:13:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:14:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:15:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:16:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:17:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:18:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:19:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:20:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:21:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:22:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:23:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:24:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:25:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:26:16 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:27:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:28:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:29:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:30:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:31:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:32:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:33:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:34:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:35:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:36:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:37:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:38:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:39:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:40:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:41:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:42:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:43:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:44:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:45:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:46:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:47:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:48:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-14 15:49:17 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:24:07 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:25:07 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:26:07 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:27:07 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:28:07 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:29:07 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:30:07 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:31:07 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:32:07 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:33:07 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:34:07 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:35:07 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:36:07 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:37:08 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:38:08 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:39:08 | SERVICE_DOWN | CRITICAL | ssh is down
+2026-04-17 09:44:08|SERVICE_DOWN|CRITICAL|service_down_ssh|email|simulated|attempt=1 simulation_mode
+2026-04-17 09:44:08|SERVICE_DOWN|CRITICAL|service_down_ssh|slack|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:44:08|SERVICE_DOWN|CRITICAL|service_down_ssh|telegram|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:44:08|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|sent|all_channels_processed
+2026-04-17 09:44:08|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:44:16|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 09:44:16|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:44:17|LOAD|WARNING|load_average_high|email|simulated|attempt=1 simulation_mode
+2026-04-17 09:44:17|LOAD|WARNING|load_average_high|slack|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:44:17|LOAD|WARNING|load_average_high|telegram|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:44:17|LOAD|WARNING|load_average_high|dispatcher|sent|all_channels_processed
+2026-04-17 09:44:17|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 09:44:17|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:44:17|TEST_EVENT|WARNING|smoke_test|email|simulated|attempt=1 simulation_mode
+2026-04-17 09:44:17|TEST_EVENT|WARNING|smoke_test|slack|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:44:17|TEST_EVENT|WARNING|smoke_test|telegram|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:44:17|TEST_EVENT|WARNING|smoke_test|dispatcher|sent|all_channels_processed
+2026-04-17 09:44:18|TEST_EVENT|WARNING|smoke_test|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 09:45:17|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 09:45:17|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:46:17|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:46:17|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:46:17|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:46:17|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:46:18|TEST_EVENT|WARNING|smoke_test|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:46:18|TEST_EVENT|WARNING|smoke_test|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:47:17|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:47:17|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:48:17|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:48:17|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:49:17|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:49:17|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:49:57|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:49:57|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:50:57|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:50:57|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:51:08|RACE|WARNING|race_title|email|simulated|attempt=1 simulation_mode
+2026-04-17 09:51:08|RACE|WARNING|race_title|email|simulated|attempt=1 simulation_mode
+2026-04-17 09:51:08|RACE|WARNING|race_title|slack|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:51:08|RACE|WARNING|race_title|telegram|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:51:08|RACE|WARNING|race_title|slack|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:51:08|RACE|WARNING|race_title|telegram|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:51:08|RACE|WARNING|race_title|dispatcher|sent|all_channels_processed
+2026-04-17 09:51:08|RACE|WARNING|race_title|dispatcher|sent|all_channels_processed
+2026-04-17 09:51:09|SAME|WARNING|same_title|email|simulated|attempt=1 simulation_mode
+2026-04-17 09:51:09|SAME|WARNING|same_title|slack|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:51:09|SAME|WARNING|same_title|telegram|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:51:09|SAME|WARNING|same_title|dispatcher|sent|all_channels_processed
+2026-04-17 09:51:09|SAME|WARNING|same_title|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 10:00:00|STRANGE|WARNING|title with | pipe|email|sent|details with | pipe
+2026-04-17 10:00:01|EMPTY|WARNING|empty details|email|sent|
+2026-04-17 09:51:32|SYSTEM|failed|monitor_boot_failure|system|failed|monitor lock already held by pid 388
+2026-04-17 09:51:32|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:51:32|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:51:33|SAME|WARNING|same_title|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 09:51:33|TRANSIENT|WARNING|slack_fail|email|skipped|attempt=1 disabled
+2026-04-17 09:51:39|TRANSIENT|WARNING|slack_fail|slack|failed|attempt=3 curl failure
+2026-04-17 09:51:39|TRANSIENT|WARNING|slack_fail|telegram|skipped|attempt=1 disabled
+2026-04-17 09:51:39|TRANSIENT|WARNING|slack_fail|dispatcher|failed|failed_channels=1
+2026-04-17 09:51:50|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:51:50|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:52:26|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:52:26|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:53:26|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:53:26|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:54:26|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:54:26|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:55:26|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:55:26|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:56:26|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:56:26|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:57:26|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:57:26|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:58:26|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 09:58:26|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:59:27|SERVICE_DOWN|CRITICAL|service_down_ssh|email|simulated|attempt=1 simulation_mode
+2026-04-17 09:59:27|SERVICE_DOWN|CRITICAL|service_down_ssh|slack|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:59:27|SERVICE_DOWN|CRITICAL|service_down_ssh|telegram|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:59:27|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|sent|all_channels_processed
+2026-04-17 09:59:27|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:59:42|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 09:59:42|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:59:43|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 09:59:43|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 09:59:43|TEST_EVENT|WARNING|smoke_test_1776412783|email|simulated|attempt=1 simulation_mode
+2026-04-17 09:59:43|TEST_EVENT|WARNING|smoke_test_1776412783|slack|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:59:43|TEST_EVENT|WARNING|smoke_test_1776412783|telegram|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:59:43|TEST_EVENT|WARNING|smoke_test_1776412783|dispatcher|sent|all_channels_processed
+2026-04-17 09:59:43|TEST_EVENT|WARNING|smoke_test_1776412783|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 09:59:43|RACE_EVENT|WARNING|smoke_race_1776412783|email|simulated|attempt=1 simulation_mode
+2026-04-17 09:59:43|RACE_EVENT|WARNING|smoke_race_1776412783|dispatcher|skipped|reason=in_progress
+2026-04-17 09:59:43|RACE_EVENT|WARNING|smoke_race_1776412783|slack|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:59:43|RACE_EVENT|WARNING|smoke_race_1776412783|telegram|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 09:59:43|RACE_EVENT|WARNING|smoke_race_1776412783|dispatcher|sent|all_channels_processed
+2026-04-17 09:59:56|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 09:59:56|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:00:32|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 10:00:32|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:20:00|PIPE|WARNING|title2026-04-17 10:01:04|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 10:01:04|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:01:04|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 10:01:04|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:01:05|TEST_EVENT|WARNING|smoke_test_1776412864|email|simulated|attempt=1 simulation_mode
+2026-04-17 10:01:05|TEST_EVENT|WARNING|smoke_test_1776412864|slack|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 10:01:05|TEST_EVENT|WARNING|smoke_test_1776412864|telegram|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 10:01:05|TEST_EVENT|WARNING|smoke_test_1776412864|dispatcher|sent|all_channels_processed
+2026-04-17 10:01:05|TEST_EVENT|WARNING|smoke_test_1776412864|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 10:01:05|RACE_EVENT|WARNING|smoke_race_1776412865|email|simulated|attempt=1 simulation_mode
+2026-04-17 10:01:05|RACE_EVENT|WARNING|smoke_race_1776412865|dispatcher|skipped|reason=in_progress
+2026-04-17 10:01:05|RACE_EVENT|WARNING|smoke_race_1776412865|slack|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 10:01:05|RACE_EVENT|WARNING|smoke_race_1776412865|telegram|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 10:01:05|RACE_EVENT|WARNING|smoke_race_1776412865|dispatcher|sent|all_channels_processed
+2026-04-17 10:01:06|PIPE|WARNING|pipe%7Ctitle_1776412866|email|simulated|attempt=1 simulation_mode
+2026-04-17 10:01:06|PIPE|WARNING|pipe%7Ctitle_1776412866|slack|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 10:01:06|PIPE|WARNING|pipe%7Ctitle_1776412866|telegram|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 10:01:06|PIPE|WARNING|pipe%7Ctitle_1776412866|dispatcher|sent|all_channels_processed
+2026-04-17 10:02:04|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:02:04|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:03:04|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:03:04|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:04:04|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:04:04|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:05:04|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:05:04|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:06:04|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:06:04|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:07:04|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:07:05|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:08:05|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:08:05|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:09:05|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:09:05|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:10:05|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:10:05|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:11:05|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:11:05|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:12:05|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:12:05|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:13:05|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:13:05|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:14:05|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:14:05|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:15:05|SERVICE_DOWN|CRITICAL|service_down_ssh|email|simulated|attempt=1 simulation_mode
+2026-04-17 10:15:05|SERVICE_DOWN|CRITICAL|service_down_ssh|slack|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 10:15:05|SERVICE_DOWN|CRITICAL|service_down_ssh|telegram|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 10:15:05|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|sent|all_channels_processed
+2026-04-17 10:15:05|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:16:05|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 10:16:05|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:17:06|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:17:06|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:18:06|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:18:06|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:19:06|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:19:06|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:20:06|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:20:06|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:21:06|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:21:06|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:22:06|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:22:06|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:23:06|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:23:06|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:24:06|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:24:06|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:25:06|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:25:06|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:26:06|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:26:06|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:27:06|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:27:06|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:28:06|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:28:06|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:29:07|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:29:07|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:30:07|SERVICE_DOWN|CRITICAL|service_down_ssh|email|simulated|attempt=1 simulation_mode
+2026-04-17 10:30:07|SERVICE_DOWN|CRITICAL|service_down_ssh|slack|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 10:30:07|SERVICE_DOWN|CRITICAL|service_down_ssh|telegram|simulated|attempt=1 simulation_or_placeholder
+2026-04-17 10:30:07|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|sent|all_channels_processed
+2026-04-17 10:30:07|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:31:07|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=dedup window=120s
+2026-04-17 10:31:07|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:32:07|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:32:07|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:33:07|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:33:07|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:34:07|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:34:07|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:35:07|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:35:07|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:36:07|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:36:07|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:37:07|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:37:07|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:38:07|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:38:07|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:39:07|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:39:07|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:40:07|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:40:08|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1
+2026-04-17 10:41:08|SERVICE_DOWN|CRITICAL|service_down_ssh|dispatcher|skipped|reason=rate_limited window=900s
+2026-04-17 10:41:08|SYSTEM|sent|monitor_cycle_completed|system|sent|status=CRITICAL down=1

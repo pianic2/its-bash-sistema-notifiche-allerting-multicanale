@@ -2,6 +2,33 @@
   "project": "alerting-system-v1",
   "version": "1.0",
   "objective": "Stabilizzare MVP e portarlo a versione v1 con notifiche reali, rate limiting e dashboard affidabile",
+  "execution_status": {
+    "updated_at": "2026-04-17",
+    "phase_1_runtime_hardening": "done",
+    "phase_2_data_contract": "done",
+    "phase_3_notification_engine": "done",
+    "phase_4_resilience_dedup_rate_retry": "done",
+    "phase_5_dashboard": "done",
+    "phase_6_smoke_tests": "done",
+    "phase_7_docs_todo_alignment": "done"
+  },
+  "task_real_status": {
+    "A1": "done",
+    "A2": "done",
+    "A3": "done",
+    "A4": "done",
+    "A5": "done",
+    "B1": "done",
+    "B2": "done",
+    "B3": "done",
+    "B4": "done",
+    "C1": "done",
+    "C2": "done",
+    "C3": "done",
+    "C4": "done",
+    "C5": "done",
+    "C6": "done"
+  },
   "principles": [
     "no overengineering",
     "bash come orchestratore",

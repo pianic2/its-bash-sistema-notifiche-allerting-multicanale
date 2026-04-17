@@ -24,13 +24,4 @@ services:
 
     restart: unless-stopped
 
-    command: >
-      bash -c "
-        echo 'Starting alert loop...' &&
-        while true; do
-          /opt/alerting/alert-system.sh;
-          sleep 60;
-        done &
-
-        apache2-foreground
-      "
+    command: ["/opt/alerting/entrypoint.sh"]

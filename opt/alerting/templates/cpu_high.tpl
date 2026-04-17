@@ -1,1 +1,1 @@
-Load high: {{LOAD_AVG}}
+Host {{HOST}} load high: {{LOAD_AVG}} (threshold {{LOAD_THRESHOLD}})

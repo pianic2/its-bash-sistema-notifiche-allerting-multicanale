@@ -1,705 +1,421 @@
 <?php
 
-$file = '/opt/alerting/variables.data';
+/*
+ * ==========================================
+ * FILE: dashboard.php
+ * RUOLO: renderizza la dashboard leggendo solo i file runtime prodotti dal sistema Bash.
+ *
+ * FLOW:
+ * 1. legge variables.data con fallback sicuri
+ * 2. legge le ultime righe di alerts.log (non tutto il file)
+ * 3. parsea servizi e log strutturato
+ * 4. esegue escaping HTML di ogni valore mostrato
+ * 5. renderizza overview, servizi e ultimi alert
+ *
+ * INPUT:
+ * - /opt/alerting/variables.data
+ * - /var/log/alerts.log
+ *
+ * OUTPUT:
+ * - HTML server-side robusto a file mancanti o righe malformate
+ *
+ * DIPENDENZE:
+ * - PHP 8+
+ * - comando tail disponibile nel container
+ *
+ * ATTENZIONE:
+ * - il parser log assume 7 campi separati da pipe
+ * - il log viene letto solo nelle ultime N righe per evitare OOM
+ * - non disabilitare escaping, i dati arrivano da file runtime
+ * ==========================================
+ */
+
+declare(strict_types=1);
+
+// --- FILE PATHS / DEFAULTS ---
+$variablesFile = '/opt/alerting/variables.data';
+$alertsFile = '/var/log/alerts.log';
 
 $defaults = [
     'HOST' => 'unknown',
     'TIMESTAMP' => 'N/A',
     'OVERALL_STATUS' => 'UNKNOWN',
     'IP_ADDRESS' => 'N/A',
-    'DISK_USAGE' => 'N/A',
-    'DISK_THRESHOLD' => 'N/A',
-    'LOAD_AVG' => 'N/A',
-    'LOAD_THRESHOLD' => 'N/A',
+    'DISK_USAGE' => '0',
+    'DISK_THRESHOLD' => '0',
+    'LOAD_AVG' => '0.00',
+    'LOAD_THRESHOLD' => '0.00',
     'UPTIME_READABLE' => 'N/A',
-    'USERS_CONNECTED' => 'N/A',
+    'USERS_CONNECTED' => '0',
     'SERVICES_STATUS' => '',
+    'SERVICES_DOWN_COUNT' => '0',
 ];
 
-$data = $defaults;
 $warnings = [];
+$data = $defaults;
 
-if (is_readable($file)) {
+// esc
+// input: stringa da mostrare in HTML
+// output: stringa escaped per HTML
+// side effects: nessuno
+// failure: nessuno
+function esc(string $value): string
+{
+    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+}
+
+// decodeLogField
+// input: campo log codificato in formato URL-safe semplice
+// output: campo decodificato per la view
+// side effects: nessuno
+// failure: nessuno; rawurldecode e tollerante
+function decodeLogField(string $value): string
+{
+    return rawurldecode($value);
+}
+
+// parseKeyValueFile
+// input: path file key=value, array default, collector warning per riferimento
+// output: array dati completo con fallback
+// side effects: aggiunge warning se file mancante/non leggibile
+// failure: non lancia eccezioni; ritorna sempre una struttura coerente
+function parseKeyValueFile(string $file, array $defaults, array &$warnings): array
+{
+    $data = $defaults;
+
+    if (!is_readable($file)) {
+        $warnings[] = 'variables.data non disponibile';
+        return $data;
+    }
+
     $lines = @file($file, FILE_IGNORE_NEW_LINES);
-
     if ($lines === false) {
-        $warnings[] = 'Runtime data not readable.';
-    } else {
-        foreach ($lines as $rawLine) {
-            $line = trim($rawLine);
+        $warnings[] = 'variables.data non leggibile';
+        return $data;
+    }
 
-            if ($line === '' || (isset($line[0]) && $line[0] === '#')) {
-                continue;
-            }
-
-            if (strpos($line, '=') === false) {
-                continue;
-            }
-
-            [$key, $value] = explode('=', $line, 2);
-            $key = trim($key);
-
-            if ($key === '') {
-                continue;
-            }
-
-            $data[$key] = trim($value);
+    foreach ($lines as $lineRaw) {
+        $line = trim((string) $lineRaw);
+        if ($line === '' || str_starts_with($line, '#')) {
+            continue;
         }
-    }
-} else {
-    $warnings[] = 'Runtime data file not available yet.';
-}
 
-function e($value): string
-{
-    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-}
+        if (!str_contains($line, '=')) {
+            continue;
+        }
 
-function services($serialized): array
-{
-    if (!is_string($serialized) || trim($serialized) === '') {
-        return [];
+        [$key, $value] = explode('=', $line, 2);
+        $key = trim($key);
+        if ($key === '') {
+            continue;
+        }
+
+        $data[$key] = trim($value);
     }
 
+    return $data;
+}
+
+// parseServices
+// input: stringa SERVICES_STATUS serializzata come name:status,name:status
+// output: lista normalizzata di servizi per il rendering UI
+// side effects: nessuno
+// failure: entry malformate vengono ignorate o marcate UNKNOWN
+function parseServices(string $serialized): array
+{
     $out = [];
+    if (trim($serialized) === '') {
+        return $out;
+    }
 
-    foreach (explode(',', $serialized) as $service) {
-        $service = trim($service);
-
-        if ($service === '') {
+    $parts = explode(',', $serialized);
+    foreach ($parts as $part) {
+        $part = trim($part);
+        if ($part === '') {
             continue;
         }
 
-        if (strpos($service, ':') === false) {
-            $out[] = [$service, 'UNKNOWN'];
+        if (!str_contains($part, ':')) {
+            $out[] = ['name' => $part, 'status' => 'UNKNOWN'];
             continue;
         }
 
-        [$name, $status] = explode(':', $service, 2);
+        [$name, $status] = explode(':', $part, 2);
         $name = trim($name);
-        $status = trim($status);
+        $status = strtoupper(trim($status));
 
         if ($name === '') {
             continue;
         }
 
-        $out[] = [$name, $status !== '' ? $status : 'UNKNOWN'];
+        if ($status === '') {
+            $status = 'UNKNOWN';
+        }
+
+        $out[] = ['name' => $name, 'status' => $status];
     }
 
     return $out;
 }
 
-$serviceList = services($data['SERVICES_STATUS']);
+// parseAlerts
+// input: path file log e numero massimo di righe finali da leggere
+// output: array di eventi pronti per la tabella dashboard
+// side effects: esegue tail esterno per limitare memoria e latenza su log grandi
+// failure: se il file manca o tail non e disponibile, ritorna array vuoto
+// nota: righe malformate o con meno di 7 campi vengono scartate silenziosamente
+function parseAlerts(string $file, int $max = 20): array
+{
+    if (!is_readable($file)) {
+        return [];
+    }
+
+    $command = 'tail -n ' . (int) $max . ' ' . escapeshellarg($file);
+    $handle = @popen($command, 'r');
+    if ($handle === false) {
+        return [];
+    }
+
+    $events = [];
+
+    while (($lineRaw = fgets($handle)) !== false) {
+        $line = trim((string) $lineRaw);
+        if ($line === '') {
+            continue;
+        }
+
+        $parts = explode('|', $line);
+        if (count($parts) < 7) {
+            continue;
+        }
+
+        $events[] = [
+            'timestamp' => decodeLogField(trim($parts[0])),
+            'event_type' => decodeLogField(trim($parts[1])),
+            'severity' => decodeLogField(trim($parts[2])),
+            'title' => decodeLogField(trim($parts[3])),
+            'channel' => decodeLogField(trim($parts[4])),
+            'outcome' => decodeLogField(trim($parts[5])),
+            'details' => decodeLogField(trim(implode('|', array_slice($parts, 6)))),
+        ];
+    }
+
+    pclose($handle);
+
+    return array_reverse($events);
+}
+
+// toneForStatus
+// input: stato o outcome testuale
+// output: token colore UI (critical, warning, ok, neutral)
+// side effects: nessuno
+// failure: valori sconosciuti ricadono su neutral
+function toneForStatus(string $status): string
+{
+    $s = strtoupper(trim($status));
+    if ($s === 'CRITICAL' || $s === 'DOWN' || $s === 'FAILED') {
+        return 'critical';
+    }
+    if ($s === 'WARNING') {
+        return 'warning';
+    }
+    if ($s === 'OK' || $s === 'ACTIVE' || $s === 'SENT') {
+        return 'ok';
+    }
+    return 'neutral';
+}
+
+// --- DATA LOADING / FALLBACKS ---
+$data = parseKeyValueFile($variablesFile, $defaults, $warnings);
+$services = parseServices((string) ($data['SERVICES_STATUS'] ?? ''));
+$alerts = parseAlerts($alertsFile, 50);
+
+$overallStatus = (string) ($data['OVERALL_STATUS'] ?? 'UNKNOWN');
+$overallTone = toneForStatus($overallStatus);
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alerting Dashboard</title>
     <style>
         :root {
-            --bg-top: #f6efe3;
-            --bg-bottom: #e7eff5;
-            --panel: rgba(255, 251, 244, 0.86);
-            --panel-strong: #fffaf2;
-            --line: rgba(16, 34, 47, 0.11);
-            --text: #10222f;
-            --muted: #5f7180;
-            --shadow: 0 24px 60px rgba(34, 49, 63, 0.12);
-            --ok: #1e8f6e;
-            --ok-soft: rgba(30, 143, 110, 0.12);
-            --warning: #d69712;
-            --warning-soft: rgba(214, 151, 18, 0.14);
-            --critical: #c94b3f;
-            --critical-soft: rgba(201, 75, 63, 0.14);
-            --neutral: #6d7d89;
-            --neutral-soft: rgba(109, 125, 137, 0.12);
+            --bg: #f4f6f8;
+            --card: #ffffff;
+            --text: #1f2933;
+            --muted: #52606d;
+            --ok: #137333;
+            --warning: #b06a00;
+            --critical: #b42318;
+            --neutral: #52606d;
+            --line: #d9e2ec;
         }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html {
-            color-scheme: light;
-        }
-
+        * { box-sizing: border-box; }
         body {
             margin: 0;
-            min-height: 100vh;
-            font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
             color: var(--text);
-            background:
-                radial-gradient(circle at top left, rgba(201, 75, 63, 0.14), transparent 30%),
-                radial-gradient(circle at top right, rgba(30, 143, 110, 0.12), transparent 35%),
-                linear-gradient(135deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
         }
-
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            opacity: 0.25;
-            background-image:
-                linear-gradient(rgba(16, 34, 47, 0.06) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(16, 34, 47, 0.06) 1px, transparent 1px);
-            background-size: 32px 32px;
-            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), transparent 80%);
-        }
-
-        .shell {
-            width: min(1180px, calc(100% - 32px));
-            margin: 0 auto;
-            padding: 28px 0 52px;
-            position: relative;
-        }
-
-        .hero,
-        .panel,
-        .metric-card,
-        .stat-card,
-        .service-card,
-        .snapshot-row {
-            animation: rise-in 0.65s ease both;
-            animation-delay: calc(var(--delay, 0) * 80ms);
-        }
-
-        .hero {
-            position: relative;
-            overflow: hidden;
+        .wrap {
+            width: min(1100px, calc(100% - 24px));
+            margin: 16px auto;
             display: grid;
-            grid-template-columns: 1.35fr 0.85fr;
-            gap: 22px;
-            padding: 28px;
-            border-radius: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.75);
-            background:
-                linear-gradient(160deg, rgba(255, 250, 242, 0.95), rgba(247, 242, 233, 0.82)),
-                linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent);
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(16px);
-        }
-
-        .hero::after {
-            content: "";
-            position: absolute;
-            width: 280px;
-            height: 280px;
-            right: -80px;
-            top: -60px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(201, 75, 63, 0.18), transparent 72%);
-        }
-
-        .eyebrow {
-            margin: 0 0 10px;
-            font-size: 0.78rem;
-            letter-spacing: 0.24em;
-            text-transform: uppercase;
-            color: var(--muted);
-        }
-
-        h1,
-        h2,
-        h3,
-        p {
-            margin-top: 0;
-        }
-
-        h1 {
-            margin-bottom: 12px;
-            font-size: clamp(2.3rem, 5vw, 4.2rem);
-            line-height: 0.95;
-            letter-spacing: -0.04em;
-            max-width: 9ch;
-        }
-
-        .hero-copy p:last-child {
-            margin-bottom: 0;
-        }
-
-        .lead {
-            max-width: 62ch;
-            font-size: 1.02rem;
-            line-height: 1.6;
-            color: var(--muted);
-        }
-
-        .hero-meta,
-        .summary-row,
-        .service-summary {
-            display: flex;
-            flex-wrap: wrap;
             gap: 12px;
         }
-
-        .chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            border-radius: 999px;
-            font-size: 0.84rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(16, 34, 47, 0.08);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-        }
-
-        .chip strong,
-        .metric-number strong {
-            font-family: Consolas, "Courier New", monospace;
-        }
-
-        .tone-ok {
-            color: var(--ok);
-            background: var(--ok-soft);
-            border-color: rgba(30, 143, 110, 0.2);
-        }
-
-        .tone-warning {
-            color: var(--warning);
-            background: var(--warning-soft);
-            border-color: rgba(214, 151, 18, 0.22);
-        }
-
-        .tone-critical {
-            color: var(--critical);
-            background: var(--critical-soft);
-            border-color: rgba(201, 75, 63, 0.22);
-        }
-
-        .tone-neutral {
-            color: var(--neutral);
-            background: var(--neutral-soft);
-            border-color: rgba(109, 125, 137, 0.18);
-        }
-
-        .hero-side {
-            display: grid;
-            gap: 14px;
-            align-content: start;
-        }
-
-        .pulse-card {
-            position: relative;
-            padding: 20px;
-            border-radius: 24px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(250, 245, 236, 0.96));
-            border: 1px solid rgba(16, 34, 47, 0.08);
-        }
-
-        .pulse-card h2 {
-            margin-bottom: 18px;
-            font-size: 0.88rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--muted);
-        }
-
-        .pulse-number {
-            font-size: clamp(2.2rem, 5vw, 3.6rem);
-            line-height: 1;
-            letter-spacing: -0.05em;
-            margin-bottom: 6px;
-        }
-
-        .pulse-caption {
-            color: var(--muted);
-            line-height: 1.5;
-        }
-
-        .warning-banner {
-            margin-top: 18px;
-            padding: 14px 18px;
-            border-radius: 18px;
-            background: rgba(201, 75, 63, 0.09);
-            border: 1px solid rgba(201, 75, 63, 0.18);
-            color: #7d3029;
-            box-shadow: var(--shadow);
-        }
-
-        .section-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 18px;
-            margin-top: 18px;
-        }
-
-        .panel {
-            grid-column: span 12;
-            padding: 22px;
-            border-radius: 24px;
-            background: var(--panel);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(14px);
-        }
-
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            gap: 14px;
-            margin-bottom: 18px;
-        }
-
-        .panel-header h2 {
-            margin-bottom: 8px;
-            font-size: 1.45rem;
-            letter-spacing: -0.03em;
-        }
-
-        .panel-header p {
-            margin-bottom: 0;
-            color: var(--muted);
-            line-height: 1.55;
-        }
-
-        .stats-grid,
-        .metrics-grid,
-        .services-grid {
-            display: grid;
-            gap: 16px;
-        }
-
-        .stats-grid {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-        }
-
-        .metrics-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .services-grid {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-
-        .stat-card,
-        .metric-card,
-        .service-card {
-            padding: 18px;
-            border-radius: 20px;
-            background: var(--panel-strong);
+        .card {
+            background: var(--card);
             border: 1px solid var(--line);
-            min-width: 0;
+            border-radius: 10px;
+            padding: 12px;
         }
-
-        .stat-card-label,
-        .metric-label,
-        .service-name,
-        .snapshot-key {
-            font-size: 0.82rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--muted);
-        }
-
-        .stat-card-value,
-        .metric-number {
-            margin-top: 8px;
-            font-size: 1.5rem;
-            letter-spacing: -0.04em;
-            word-break: break-word;
-        }
-
-        .metric-top {
+        .header {
             display: flex;
             justify-content: space-between;
-            gap: 12px;
-            align-items: start;
-            margin-bottom: 14px;
-        }
-
-        .metric-note,
-        .metric-threshold,
-        .service-meta {
-            color: var(--muted);
-            line-height: 1.5;
-        }
-
-        .meter {
-            margin-top: 14px;
-        }
-
-        .meter-track {
-            height: 12px;
-            border-radius: 999px;
-            background: rgba(16, 34, 47, 0.08);
-            overflow: hidden;
-        }
-
-        .meter-fill {
-            height: 100%;
-            width: var(--fill, 0%);
-            border-radius: 999px;
-            transition: width 0.4s ease;
-            background: linear-gradient(90deg, currentColor, rgba(255, 255, 255, 0.95));
-        }
-
-        .service-card {
-            display: grid;
-            gap: 12px;
-        }
-
-        .service-top {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
             align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
         }
-
-        .service-name {
-            font-size: 1rem;
-            letter-spacing: -0.02em;
-            text-transform: none;
-            color: var(--text);
-            font-weight: 700;
-        }
-
-        .service-meta {
-            font-size: 0.92rem;
-        }
-
-        .snapshot {
+        .grid {
             display: grid;
-            gap: 12px;
+            gap: 10px;
+            grid-template-columns: repeat(4, 1fr);
         }
-
-        .snapshot-row {
+        .grid2 {
             display: grid;
-            grid-template-columns: 190px 1fr;
-            gap: 12px;
-            align-items: start;
-            padding: 14px 16px;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(16, 34, 47, 0.08);
+            gap: 10px;
+            grid-template-columns: repeat(2, 1fr);
         }
-
-        .snapshot-value {
-            font-family: Consolas, "Courier New", monospace;
-            color: var(--text);
-            word-break: break-word;
+        .pill {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
         }
-
-        .empty-state {
-            padding: 26px;
-            border-radius: 20px;
-            text-align: center;
-            color: var(--muted);
-            background: rgba(255, 255, 255, 0.56);
-            border: 1px dashed rgba(16, 34, 47, 0.18);
+        .tone-ok { background: var(--ok); }
+        .tone-warning { background: var(--warning); }
+        .tone-critical { background: var(--critical); }
+        .tone-neutral { background: var(--neutral); }
+        .muted { color: var(--muted); font-size: 13px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
         }
-
-        .muted {
-            color: var(--muted);
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid var(--line);
+            vertical-align: top;
         }
-
-        @keyframes rise-in {
-            from {
-                opacity: 0;
-                transform: translateY(16px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 980px) {
-            .hero,
-            .stats-grid,
-            .metrics-grid,
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .snapshot-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .shell {
-                width: min(100% - 20px, 1180px);
-                padding-top: 20px;
-            }
-
-            .hero,
-            .panel {
-                padding: 18px;
-                border-radius: 22px;
-            }
-
-            h1 {
-                max-width: none;
-            }
-
-            .panel-header {
-                flex-direction: column;
-            }
+        .mono { font-family: Consolas, monospace; }
+        ul { margin: 0; padding-left: 18px; }
+        @media (max-width: 900px) {
+            .grid, .grid2 { grid-template-columns: 1fr; }
+            th:nth-child(7), td:nth-child(7) { display: none; }
         }
     </style>
 </head>
 <body>
-    <main class="shell">
-        <section class="hero" style="--delay: 0;">
-            <div class="hero-copy">
-                <p class="eyebrow">System Monitoring Dashboard</p>
-                <h1>Operations cockpit for live infrastructure health.</h1>
-                <p class="lead">
-                    A single visual layer for current host status, runtime metrics and service availability,
-                    rendered from <strong>variables.data</strong> without adding business logic to PHP.
-                </p>
-                <div class="hero-meta">
-                    <span class="chip tone-<?= e($overallTone) ?>">
-                        Overall
-                        <strong><?= e($overallStatus) ?></strong>
-                    </span>
-                    <span class="chip tone-neutral">
-                        Host
-                        <strong><?= e($data['HOST']) ?></strong>
-                    </span>
-                    <span class="chip tone-neutral">
-                        Updated
-                        <strong><?= e($data['TIMESTAMP']) ?></strong>
-                    </span>
-                </div>
+    <main class="wrap">
+        <section class="card header">
+            <div>
+                <h1 style="margin:0 0 6px 0; font-size:22px;">Sistema Alerting Multi-Canale</h1>
+                <div class="muted">Host <?= esc((string) $data['HOST']) ?> - Ultimo update <?= esc((string) $data['TIMESTAMP']) ?></div>
             </div>
-
-            <div class="hero-side">
-                <div class="pulse-card">
-                    <h2>System Pulse</h2>
-                    <div class="pulse-number"><?= e((string) $totalServices) ?></div>
-                    <p class="pulse-caption">
-                        monitored services, with
-                        <strong><?= e((string) $serviceCounts['ACTIVE']) ?> active</strong>
-                        and
-                        <strong><?= e((string) $serviceCounts['DOWN']) ?> down</strong>.
-                    </p>
-                </div>
-                <div class="summary-row">
-                    <span class="chip tone-ok">Active <?= e((string) $serviceCounts['ACTIVE']) ?></span>
-                    <span class="chip tone-critical">Down <?= e((string) $serviceCounts['DOWN']) ?></span>
-                    <span class="chip tone-neutral">Unknown <?= e((string) $serviceCounts['UNKNOWN']) ?></span>
-                </div>
-            </div>
+            <span class="pill tone-<?= esc($overallTone) ?>">STATUS <?= esc($overallStatus) ?></span>
         </section>
 
         <?php if ($warnings): ?>
-            <section class="warning-banner" style="--delay: 1;">
-                <strong>Runtime warning:</strong> <?= e(implode(' ', $warnings)) ?>
+            <section class="card">
+                <strong>Warning runtime</strong>
+                <ul>
+                    <?php foreach ($warnings as $w): ?>
+                        <li><?= esc((string) $w) ?></li>
+                    <?php endforeach; ?>
+                </ul>
             </section>
         <?php endif; ?>
 
-        <section class="section-grid">
-            <section class="panel" style="--delay: 2;">
-                <div class="panel-header">
-                    <div>
-                        <h2>Overview</h2>
-                        <p>Key environment details surfaced first so the dashboard is readable in a few seconds.</p>
-                    </div>
-                    <span class="chip tone-<?= e($overallTone) ?>"><?= e($overallStatus) ?></span>
-                </div>
+        <section class="card grid">
+            <div>
+                <div class="muted">IP</div>
+                <div><?= esc((string) $data['IP_ADDRESS']) ?></div>
+            </div>
+            <div>
+                <div class="muted">Disk</div>
+                <div><?= esc((string) $data['DISK_USAGE']) ?>% / <?= esc((string) $data['DISK_THRESHOLD']) ?>%</div>
+            </div>
+            <div>
+                <div class="muted">Load</div>
+                <div><?= esc((string) $data['LOAD_AVG']) ?> / <?= esc((string) $data['LOAD_THRESHOLD']) ?></div>
+            </div>
+            <div>
+                <div class="muted">Utenti connessi</div>
+                <div><?= esc((string) $data['USERS_CONNECTED']) ?></div>
+            </div>
+        </section>
 
-                <div class="stats-grid">
-                    <?php foreach ($stats as $index => $stat): ?>
-                        <article class="stat-card tone-<?= e($stat['tone']) ?>" style="--delay: <?= e((string) ($index + 3)) ?>;">
-                            <div class="stat-card-label"><?= e($stat['label']) ?></div>
-                            <div class="stat-card-value"><?= e($stat['value']) ?></div>
-                        </article>
-                    <?php endforeach; ?>
-                </div>
-            </section>
+        <section class="card grid2">
+            <div>
+                <h2 style="margin-top:0;">Servizi monitorati</h2>
+                <?php if (!$services): ?>
+                    <div class="muted">Nessun servizio disponibile</div>
+                <?php else: ?>
+                    <ul>
+                        <?php foreach ($services as $service): ?>
+                            <li>
+                                <?= esc($service['name']) ?>
+                                <span class="pill tone-<?= esc(toneForStatus($service['status'])) ?>"><?= esc($service['status']) ?></span>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </div>
+            <div>
+                <h2 style="margin-top:0;">Uptime</h2>
+                <div><?= esc((string) $data['UPTIME_READABLE']) ?></div>
+                <p class="muted">Servizi down: <?= esc((string) $data['SERVICES_DOWN_COUNT']) ?></p>
+            </div>
+        </section>
 
-            <section class="panel" style="--delay: 4;">
-                <div class="panel-header">
-                    <div>
-                        <h2>Resource Pressure</h2>
-                        <p>Disk and load are visualized against their thresholds to make risky conditions stand out immediately.</p>
-                    </div>
-                </div>
-
-                <div class="metrics-grid">
-                    <article class="metric-card tone-<?= e($diskTone) ?>" style="--fill: <?= e((string) disk_fill($diskValue)) ?>%; --delay: 5;">
-                        <div class="metric-top">
-                            <div>
-                                <div class="metric-label">Disk Usage</div>
-                                <div class="metric-number">
-                                    <strong><?= e($data['DISK_USAGE']) ?>%</strong>
-                                </div>
-                            </div>
-                            <span class="chip tone-<?= e($diskTone) ?>"><?= e($diskLabel) ?></span>
-                        </div>
-                        <div class="metric-threshold">Threshold: <?= e($data['DISK_THRESHOLD']) ?>%</div>
-                        <div class="meter">
-                            <div class="meter-track">
-                                <div class="meter-fill"></div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="metric-card tone-<?= e($loadTone) ?>" style="--fill: <?= e((string) load_fill($loadValue, $loadThreshold)) ?>%; --delay: 6;">
-                        <div class="metric-top">
-                            <div>
-                                <div class="metric-label">Load Average</div>
-                                <div class="metric-number">
-                                    <strong><?= e($data['LOAD_AVG']) ?></strong>
-                                </div>
-                            </div>
-                            <span class="chip tone-<?= e($loadTone) ?>"><?= e($loadLabel) ?></span>
-                        </div>
-                        <div class="metric-threshold">Threshold: <?= e($data['LOAD_THRESHOLD']) ?></div>
-                        <div class="meter">
-                            <div class="meter-track">
-                                <div class="meter-fill"></div>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-            </section>
-
-            <section class="panel" style="--delay: 7;">
-                <div class="panel-header">
-                    <div>
-                        <h2>Service Health</h2>
-                        <p>Each monitored service has a dedicated state tile with strong color feedback.</p>
-                    </div>
-                    <div class="service-summary">
-                        <span class="chip tone-ok">ACTIVE <?= e((string) $serviceCounts['ACTIVE']) ?></span>
-                        <span class="chip tone-critical">DOWN <?= e((string) $serviceCounts['DOWN']) ?></span>
-                        <span class="chip tone-neutral">UNKNOWN <?= e((string) $serviceCounts['UNKNOWN']) ?></span>
-                    </div>
-                </div>
-
-<?php if ($warnings): ?>
-<p><?= e(implode(' ', $warnings)) ?></p>
-<?php endif; ?>
-
-<p>Host: <?= e($data['HOST']) ?></p>
-<p>IP: <?= e($data['IP_ADDRESS']) ?></p>
-<p>Status: <b><?= e($data['OVERALL_STATUS']) ?></b></p>
-<p>Time: <?= e($data['TIMESTAMP']) ?></p>
-
-<h2>Resources</h2>
-<p>Disk: <?= e($data['DISK_USAGE']) ?>% / threshold <?= e($data['DISK_THRESHOLD']) ?>%</p>
-<p>Load: <?= e($data['LOAD_AVG']) ?> / threshold <?= e($data['LOAD_THRESHOLD']) ?></p>
-<p>Uptime: <?= e($data['UPTIME_READABLE']) ?></p>
-<p>Users connected: <?= e($data['USERS_CONNECTED']) ?></p>
-
-<h2>Services</h2>
-<?php if (!$serviceList): ?>
-<p>No services data available.</p>
-<?php else: ?>
-<ul>
-<?php foreach ($serviceList as [$name, $status]): ?>
-  <li><?= e($name) ?> -> <?= e($status) ?></li>
-<?php endforeach; ?>
-</ul>
-<?php endif; ?>
+        <section class="card">
+            <h2 style="margin-top:0;">Ultimi alert</h2>
+            <?php if (!$alerts): ?>
+                <div class="muted">alerts.log vuoto o non disponibile</div>
+            <?php else: ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Event</th>
+                            <th>Severity</th>
+                            <th>Title</th>
+                            <th>Channel</th>
+                            <th>Outcome</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($alerts as $a): ?>
+                            <tr>
+                                <td class="mono"><?= esc($a['timestamp']) ?></td>
+                                <td><?= esc($a['event_type']) ?></td>
+                                <td><span class="pill tone-<?= esc(toneForStatus($a['severity'])) ?>"><?= esc($a['severity']) ?></span></td>
+                                <td><?= esc($a['title']) ?></td>
+                                <td><?= esc($a['channel']) ?></td>
+                                <td><span class="pill tone-<?= esc(toneForStatus($a['outcome'])) ?>"><?= esc($a['outcome']) ?></span></td>
+                                <td class="mono"><?= esc($a['details']) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+        </section>
+    </main>
+</body>
+</html>

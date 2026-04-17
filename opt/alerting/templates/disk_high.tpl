@@ -1,1 +1,1 @@
-Disk usage high: {{DISK_USAGE}}%
+Host {{HOST}} disk usage high: {{DISK_USAGE}}% (threshold {{DISK_THRESHOLD}}%)

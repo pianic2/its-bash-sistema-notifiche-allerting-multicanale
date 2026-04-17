@@ -1,1 +1,1 @@
-Service {{SERVICE_NAME}} is DOWN
+Host {{HOST}} service {{SERVICE_NAME}} is DOWN
